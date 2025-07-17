@@ -1,0 +1,11 @@
+#For Jupyter Notebook
+.ipynb_checkpoints/
+
+#Python Cache files
+forms/__pycache__/
+*.py[cod]
+__pycache__/
+
+# Project-ignored folders
+old_agent_versions/
+assets/

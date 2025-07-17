@@ -1,0 +1,18 @@
+[theme]
+# Vibrant primary accent for buttons, sliders, etc.
+primaryColor = "#00d1b2"  # A clean cyan/teal accent (more visible than magenta)
+
+# Main background (page content)
+backgroundColor = "#001f29"  # Slightly brighter than #002b36
+
+# Sidebar + widget background
+secondaryBackgroundColor = "#2b3a42"  # Much better contrast with page + text
+
+# General text color
+textColor = "#f0f0f0"
+
+# Optional extras (for more advanced Streamlit themes)
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
