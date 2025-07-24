@@ -15,11 +15,11 @@ import requests
 sns_client = boto3.client("sns")
 SNS_TOPIC_ARN = "YOUR_SNS_TOPIC_ARN"
 
-#Adds user IP to the inbounding rules for VPC
+#Adds the user's IP to the inbounding rules for AWS VPC
 ip = requests.get("https://api.ipify.org").text
 cidr_ip = f"{ip}/32"
 ec2_client = boto3.client('ec2')
-security_group_id = "sg-005dec6c71ad3d791"
+security_group_id = "security_group_id"
 
 try:
     ec2_client.authorize_security_group_ingress(
@@ -66,7 +66,7 @@ db = SQLDatabase.from_uri(DATABASE_URI)
 
 query_prompt_template = hub.pull("langchain-ai/sql-query-system-prompt")
 
-# Function to send the notification
+# Function to send the notification to the email configured in SNS settings
 def send_sns_notification(subject, message):
     try:
         response = sns_client.publish(
@@ -78,7 +78,7 @@ def send_sns_notification(subject, message):
         print(f"Failed to send an SNS notification: {str(e)}" )
 
 
-#Generate SQL query from the user's question and prior chat history
+# Function to Generate an SQL query from the user's question and prior chat history
 def write_query(question: str, history_str: str):
 
     #Might need to rewrite this query since question will appear twice, before and after the chat history 
@@ -99,16 +99,16 @@ def write_query(question: str, history_str: str):
 
     SQL Query:
     """
-    # Format the prompt with the actual response
+    # Formats the prompt with the actual response
     prompt = extraction_prompt.format(response=response)
-    # Invoke the language model with the prompt
+    # Invokes the language model with the prompt
     parsed_query = llm.invoke(prompt)
     cleaned_query = parsed_query.content.strip().strip("`")
     if cleaned_query.startswith("sql"):
         cleaned_query = cleaned_query[3:].strip()
     return cleaned_query
 
-#Executes the SQL query
+#Executes the SQL query and returns the results
 def execute_query(query: str):
     
     execute_query_tool = QuerySQLDatabaseTool(db=db)
@@ -163,7 +163,7 @@ SESSION_ID = "user_123"
 st.title("Internal HR Chatbot Tool")
 
 
-#Configuration for displaying in streamlit UI and invoking llm
+#Configuration for displaying the chatbot UI with streamlit and invoking the llm
 
 for msg in history_for_chain.messages:
     role = "user" if msg.type == "human" else "assistant"
